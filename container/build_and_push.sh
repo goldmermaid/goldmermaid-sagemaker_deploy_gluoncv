@@ -48,6 +48,11 @@ then
     aws ecr create-repository --repository-name "${image}" > /dev/null
 fi
 
+
+# Edit ECR policy permission rights
+aws ecr set-repository-policy --repository-name "${image}" --policy-text ecr_policy.json
+
+
 # Get the login command from ECR and execute it directly
 $(aws ecr get-login --region ${region} --no-include-email)
 
@@ -57,4 +62,4 @@ $(aws ecr get-login --region ${region} --no-include-email)
 docker build  -t ${image} --build-arg APP=$app .
 docker tag ${image} ${fullname}
 
-docker push ${fullname}
+# docker push ${fullname}
